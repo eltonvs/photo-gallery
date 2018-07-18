@@ -1,0 +1,15 @@
+{% extends "layout.jinja2" %}
+
+{% block content %}
+<div class="content">
+  <h1>Photo Gallery</h1>
+  <hr>
+  {% if photos %}
+    {% for photo in photos %}
+        Hi
+    {% endfor %}
+  {% else %}
+    <p class="lead">No photo found.</p>
+  {% endif %}
+</div>
+{% endblock content %}
