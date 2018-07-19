@@ -10,6 +10,7 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
 
 requires = [
     'bcrypt',
+    'boto',
     'plaster_pastedeploy',
     'pyramid',
     'pyramid_jinja2',
