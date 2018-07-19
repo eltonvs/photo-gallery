@@ -4,6 +4,15 @@
 <div class="content">
   <h1>Upload a Photo</h1>
   <hr>
+  {% if errors %}
+    <div class="alert alert-danger" role="alert">
+      <strong>Error while sending image!</strong>{{ errors }}
+    </div>
+  {% elif not errors and photo is not none %}
+    <div class="alert alert-success" role="alert">
+        <strong>Success!</strong>
+    </div>
+  {% endif %}
   <form enctype="multipart/form-data" action="{{ request.current_route_url() }}" method="POST">
     <div class="form-group">
       <label for="image-input">Choose a file</label>

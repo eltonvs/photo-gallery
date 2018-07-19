@@ -3,6 +3,7 @@ from pyramid.security import remember, forget
 from pyramid.view import view_config, view_defaults
 
 from photo_gallery.models.user import UserModel
+from photo_gallery.models.photo import PhotoModel
 from photo_gallery.domain.user import User
 
 
@@ -11,13 +12,19 @@ class PhotoGalleryViews:
     def __init__(self, request):
         self.request = request
         self.logged_in = request.authenticated_userid
+        self.settings = request.registry.settings
 
     @view_config(route_name='index')
     def index(self):
         user_model = UserModel()
         user = user_model.get_user_from_email(self.logged_in)
+
+        photo_model = PhotoModel()
+        photos = photo_model.approved_photos()
+
         return {
-            'user': user
+            'user': user,
+            'photos': photos
         }
 
     @view_config(route_name='restrict', renderer='templates/restrict.jinja2')
@@ -30,10 +37,25 @@ class PhotoGalleryViews:
             url = self.request.route_url('index')
             return HTTPFound(location=url)
 
+        photo_model = PhotoModel()
+        photos = photo_model.all_photos()
+
         return {
             'page_title': 'Restrict Page',
-            'user': user
+            'user': user,
+            'photos': photos
         }
+
+    @view_config(route_name='restrict', request_method="POST", renderer='json')
+    def restrict_request(self):
+        params = self.request.params
+
+        in_photo_id = params.get("photo_id", '')
+
+        photo_model = PhotoModel()
+        res = photo_model.toggle_photo_status(in_photo_id)
+
+        return {"approved": res}
 
     @view_config(route_name='login', renderer='templates/login.jinja2')
     def login(self):
@@ -130,13 +152,19 @@ class PhotoGalleryViews:
             return HTTPFound(location=url)
 
         params = self.request.params
-        in_photo = params.get('photo', '')
+        storage = self.request.storage
+        bucket_name = self.settings['storage.aws.bucket_name']
 
-        # Create photo object, and send to server
+        in_photo = params.get('photo', None)
+
+        photo_model = PhotoModel()
+        errors = photo_model.save_photo(in_photo, storage, bucket_name)
 
         return {
             'page_title': 'Upload',
-            'user': user
+            'user': user,
+            'errors': errors,
+            'photo': in_photo
         }
 
     @view_config(route_name='logout')

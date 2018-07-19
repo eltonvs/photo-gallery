@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A simple filtered photo gallery">
     <meta name="author" content="Elton Viana">
-    <link rel="shortcut icon" href="{{ request.static_url('photo_gallery:static/pyramid-16x16.png') }}">
+    <link rel="shortcut icon" href="{{ request.static_url('photo_gallery:static/img/pyramid-16x16.png') }}">
 
     <title>{% if page_title %}{{ page_title }} - {% endif %}Photo Gallery</title>
 
@@ -14,7 +14,8 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles -->
-    <link href="{{ request.static_url('photo_gallery:static/theme.css') }}" rel="stylesheet">
+    {% block custom_styles %}{% endblock custom_styles %}
+    <link href="{{ request.static_url('photo_gallery:static/css/theme.css') }}" rel="stylesheet">
   </head>
 
   <body>
@@ -61,5 +62,6 @@
     ================================================== -->
     <script src="//oss.maxcdn.com/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    {% block custom_scripts %}{% endblock custom_scripts %}
   </body>
 </html>

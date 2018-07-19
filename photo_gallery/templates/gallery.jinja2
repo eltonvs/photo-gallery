@@ -1,15 +1,32 @@
 {% extends "layout.jinja2" %}
 
+{% block custom_styles %}
+<link href="{{ request.static_url('photo_gallery:static/vendors/simpleLightbox/simpleLightbox.min.css') }}" rel="stylesheet">
+{% endblock custom_styles %}
+
 {% block content %}
 <div class="content">
   <h1>Photo Gallery</h1>
   <hr>
   {% if photos %}
+  <div class="row gallery">
     {% for photo in photos %}
-        Hi
+    <div class="col-xs-6 col-md-3">
+      <a href="{{ photo.url }}" class="thumbnail" title="Image - {{ photo.s3_file_name }}">
+        <img src="{{ photo.url }}" alt="Image - {{ photo.s3_file_name }}">
+      </a>
+    </div>
     {% endfor %}
+  </div>
   {% else %}
-    <p class="lead">No photo found.</p>
+  <p class="lead">No photo found.</p>
   {% endif %}
 </div>
 {% endblock content %}
+
+{% block custom_scripts %}
+<script src="{{ request.static_url('photo_gallery:static/vendors/simpleLightbox/simpleLightbox.min.js') }}"></script>
+<script>
+  new SimpleLightbox({elements: '.gallery a'});
+</script>
+{% endblock custom_scripts %}

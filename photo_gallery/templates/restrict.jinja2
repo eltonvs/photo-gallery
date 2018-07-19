@@ -5,5 +5,53 @@
   <h1>Restrict Area</h1>
   <hr>
   <p class="lead">Filter photos</p>
+  <div class="row">
+    {% if photos %}
+      {% for photo in photos %}
+      <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+          <img src="{{ photo.url }}" alt="Image - {{ photo.s3_file_name }}">
+          <div class="caption">
+            {% if photo.approved %}
+            <a href="#" class="btn btn-block btn-warning" onclick="toggle_image_status(event, this)" data-id="{{ photo.id }}">Disapprove</a>
+            {% else %}
+            <a href="#" class="btn btn-block btn-success" onclick="toggle_image_status(event, this)" data-id="{{ photo.id }}">Approve</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="lead">No photo found to be filtered.</p>
+    {% endif %}
+  </div>
 </div>
 {% endblock content %}
+
+{% block custom_scripts %}
+<script>
+  function toggle_image_status(event, object) {
+    event.preventDefault();
+
+    // Change button text while loading
+    object.innerHTML = "...";
+
+    $.ajax({
+      type: "POST",
+      url: "{{ request.current_route_url() }}",
+      data: {photo_id: object.dataset.id},
+      success: function(msg) {
+        if (msg.approved) {
+          object.innerHTML = "Disapprove";
+          $(object).removeClass('btn-success');
+          $(object).addClass('btn-warning');
+        } else {
+          object.innerHTML = "Approve";
+          $(object).removeClass('btn-warning');
+          $(object).addClass('btn-success');
+        }
+      },
+    });
+  }
+</script>
+{% endblock custom_scripts %}

@@ -13,9 +13,16 @@ from gridfs import GridFS
 from pymongo import MongoClient
 
 
+def expandvars_dict(settings):
+    """Expands all environment variables in a settings dictionary."""
+    from os.path import expandvars
+    return dict((key, expandvars(val)) for key, val in settings.items())
+
+
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
+    settings = expandvars_dict(settings)
     config = Configurator(settings=settings)
 
     # Security policies
