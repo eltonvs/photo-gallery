@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="{{request.locale_name}}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A simple filtered photo gallery">
+    <meta name="author" content="Elton Viana">
+    <link rel="shortcut icon" href="{{ request.static_url('photo_gallery:static/img/pyramid-16x16.png') }}">
+
+    <title>{% if page_title %}{{ page_title }} - {% endif %}Photo Gallery</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles -->
+    {% block custom_styles %}{% endblock custom_styles %}
+    <link href="{{ request.static_url('photo_gallery:static/css/theme.css') }}" rel="stylesheet">
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ request.route_url('index') }}">Photo Gallery</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            {% if user %}
+              <li><a href="{{ request.route_url('upload') }}">Upload</a></li>
+              {% if user.admin %}
+                <li><a href="{{ request.route_url('restrict') }}">Restrict</a></li>
+              {% endif %}
+            {% endif %}
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            {% if not user %}
+              <li><a href="{{ request.route_url('register') }}">Register</a></li>
+              <li><a href="{{ request.route_url('login') }}">Log In</a></li>
+            {% else %}
+              <li><a>Hello, {{ user.name }}!</a></li>
+              <li><a href="{{ request.route_url('logout') }}">Logout</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      {% block content %}
+        <p>No content</p>
+      {% endblock content %}
+    </div>
+
+    <!-- JavaScript
+    ================================================== -->
+    <script src="//oss.maxcdn.com/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    {% block custom_scripts %}{% endblock custom_scripts %}
+  </body>
+</html>
