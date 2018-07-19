@@ -106,7 +106,7 @@ class PhotoGalleryViews:
         in_name = params.get('name', '')
         in_email = params.get('email', '')
         in_password = params.get('password', '')
-        in_confirm_password = params.get('confirm-password', '')
+        in_confirm_password = params.get('confirm_password', '')
         in_admin = params.get('admin', False)
         if in_admin:
             in_admin = True
@@ -119,7 +119,7 @@ class PhotoGalleryViews:
         return {
             'page_title': 'Registered User',
             'errors': register_user,
-            'user': user
+            'user_form': user
         }
 
     @view_config(route_name='upload', renderer='templates/upload.jinja2')
@@ -139,7 +139,7 @@ class PhotoGalleryViews:
 
     @view_config(
         route_name='upload',
-        request_method="POST",
+        request_method='POST',
         renderer='templates/upload.jinja2'
     )
     def upload_request(self):

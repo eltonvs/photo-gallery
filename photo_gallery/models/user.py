@@ -60,6 +60,7 @@ class UserModel():
         if not user.password:
             err['empty_password'] = True
         if user.password != pass_conf:
+            print(user.password, pass_conf)
             err['passwords_dont_match'] = True
 
         return err
